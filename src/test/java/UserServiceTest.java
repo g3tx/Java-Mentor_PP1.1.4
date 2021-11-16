@@ -14,9 +14,8 @@ public class UserServiceTest {
     private final String testLastName = "Ivanov";
     private final byte testAge = 5;
 
-    public UserServiceTest() throws SQLException, ClassNotFoundException {
+    public UserServiceTest() throws SQLException {
     }
-
 
     @Test
     public void dropUsersTable() {

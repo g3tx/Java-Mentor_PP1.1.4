@@ -2,12 +2,12 @@ package jm.task.core.jdbc;
 
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
+
 import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        // реализуйте алгоритм здесь
+    public static void main(String[] args) throws SQLException {
         UserDaoJDBCImpl userDao = new UserDaoJDBCImpl();
 
         userDao.createUsersTable();
@@ -30,12 +30,14 @@ public class Main {
         System.out.println("User с именем - " + user4.getName() + " добавлен в базу данных");
 
         List<User> userList = userDao.getAllUsers();
-        userList.stream().map(User::toString).forEach(System.out::println);
+        userList.forEach(s -> System.out.println(s.toString()));
 
         userDao.cleanUsersTable();
         System.out.println("Таблица очищена");
 
         userDao.dropUsersTable();
         System.out.println("Таблица удалена");
+
+        UserDaoJDBCImpl.connection.close();
     }
 }

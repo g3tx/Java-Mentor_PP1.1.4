@@ -18,55 +18,67 @@ public class UserDaoJDBCImpl implements UserDao {
 
     private static long ID = 1;
 
-    Connection connection = Util.getMySQLConnection();
+    public static Connection connection;
 
-    public UserDaoJDBCImpl() throws SQLException, ClassNotFoundException {
+    static {
+        try {
+            connection = Util.getMySQLConnection();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public UserDaoJDBCImpl() {
 
     }
 
-    public void createUsersTable() {
+    public void createUsersTable() throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(DELETE_TABLE); //удаляет предыдущую таблицу, если она была
             statement.executeUpdate(CREATE_TABLE);
-           connection.commit();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
         }
     }
 
-    public void dropUsersTable() {
+    public void dropUsersTable() throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(DELETE_TABLE);
-           connection.rollback();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
         }
     }
 
-    public void saveUser(String name, String lastName, byte age) {
+    public void saveUser(String name, String lastName, byte age) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_NEW)) {
             preparedStatement.setLong(1, ID++);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, lastName);
             preparedStatement.setByte(4, age);
             preparedStatement.execute();
-           connection.rollback();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
         }
     }
 
-    public void removeUserById(long id) {
+    public void removeUserById(long id) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-           connection.rollback();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
         }
     }
 
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers() throws SQLException {
         List<User> userList = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(GET_ALL);
@@ -78,20 +90,22 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setLastName(resultSet.getString(3));
                 user.setAge(resultSet.getByte(4));
                 userList.add(user);
-               connection.commit();
+                connection.commit();
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
         }
         return userList;
     }
 
-    public void cleanUsersTable() {
+    public void cleanUsersTable() throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(CLEAN_TABLE);
-           connection.commit();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            connection.rollback();
         }
     }
 }
