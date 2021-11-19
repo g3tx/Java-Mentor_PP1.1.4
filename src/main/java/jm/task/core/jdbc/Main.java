@@ -1,14 +1,13 @@
 package jm.task.core.jdbc;
 
-import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
+import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
 import jm.task.core.jdbc.model.User;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
-        UserDaoJDBCImpl userDao = new UserDaoJDBCImpl();
+    public static void main(String[] args) {
+        UserDaoHibernateImpl userDao = new UserDaoHibernateImpl();
 
         userDao.createUsersTable();
         System.out.println("Таблица создана");
@@ -37,7 +36,5 @@ public class Main {
 
         userDao.dropUsersTable();
         System.out.println("Таблица удалена");
-
-        UserDaoJDBCImpl.connection.close();
     }
 }
