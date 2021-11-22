@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    public UserServiceImpl() {
-    }
 
     private final UserDao userDao = new UserDaoHibernateImpl();
 

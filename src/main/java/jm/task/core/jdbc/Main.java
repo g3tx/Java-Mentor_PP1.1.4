@@ -36,5 +36,7 @@ public class Main {
 
         userDao.dropUsersTable();
         System.out.println("Таблица удалена");
+
+        UserDaoHibernateImpl.session.close();
     }
 }
